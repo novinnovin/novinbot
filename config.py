@@ -1,5 +1,5 @@
-admins = [5310603408, 823145861]  # admins user ids
-token = "6409348451:AAFD5CH2KFimFgwE3VTNd5bPfA-xaVDWxAo"
+admins = [6526380251]  # admins user ids
+token = "8021752538:AAEfUfmMZvwd7s9fUJcpbUcL8IHRdm4hzVw"
 
 host_db = "localhost"
 database = "Novinverifytelbot"  # database name
