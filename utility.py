@@ -27,7 +27,7 @@ step_page = 10
 
 
 bot = telegram.Bot(token=token)
-get_me = bot.get_me()
+get_me = await bot.get_me()
 bot_id = get_me.id
 bot_username = get_me.username
 

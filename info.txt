@@ -1,0 +1,11 @@
+ipv4: 141.11.182.11
+ipv6: 2a0f:2b86:10:1:1:1:d482:5833
+port: 9011
+
+user: root
+password: !Khodafez123
+
+API Hash, session
+
+26441982
+ef576ee6a97020b4050c549998e07c5d
