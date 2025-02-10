@@ -484,38 +484,42 @@ try:
             elif status == "order_link":
                 cs.execute(f"SELECT * FROM {utl.orders} WHERE id={table_id}")
                 row_orders = cs.fetchone()
-                link = row_orders["origin"]
-                try:
-                    client(
-                        telethon.functions.channels.GetParticipantRequest(
-                            channel=link, participant="me"
-                        )
-                    )
-                except:
+                links = row_orders["origin"].split(",")  # جدا کردن لینک‌های مبدا
+
+                for link in links:  # پردازش هر لینک مبدا به‌صورت جداگانه
+                    link = link.strip()
                     try:
-                        if "/joinchat/" in link:
-                            client(
-                                telethon.functions.messages.ImportChatInviteRequest(
-                                    link.split("/joinchat/")[1]
-                                )
+                        client(
+                            telethon.functions.channels.GetParticipantRequest(
+                                channel=link, participant="me"
                             )
-                        else:
-                            client(
-                                telethon.functions.channels.JoinChannelRequest(
-                                    channel=link
+                        )
+                    except:
+                        try:
+                            if "/joinchat/" in link:
+                                client(
+                                    telethon.functions.messages.ImportChatInviteRequest(
+                                        link.split("/joinchat/")[1]
+                                    )
                                 )
-                            )
-                    except telethon.errors.UserAlreadyParticipantError as e:
-                        pass
-                result = client(
-                    telethon.functions.channels.GetFullChannelRequest(channel=link)
-                )
-                chat_origin = result.full_chat.id
-                participants_count = result.full_chat.participants_count
-                origin_id = int(f"-100{result.full_chat.id}")
-                cs.execute(
-                    f"UPDATE {utl.orders} SET origin_id='{origin_id}' WHERE id={row_orders['id']}"
-                )
+                            else:
+                                client(
+                                    telethon.functions.channels.JoinChannelRequest(
+                                        channel=link
+                                    )
+                                )
+                        except telethon.errors.UserAlreadyParticipantError:
+                            pass
+                    
+                    result = client(
+                        telethon.functions.channels.GetFullChannelRequest(channel=link)
+                    )
+                    chat_origin = result.full_chat.id
+                    origin_id = int(f"-100{result.full_chat.id}")
+                    cs.execute(
+                        f"UPDATE {utl.orders} SET origin_id='{origin_id}' WHERE id={row_orders['id']}'"
+                    )
+
 
                 link = row_orders["destination"]
                 try:

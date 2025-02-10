@@ -1646,41 +1646,42 @@ def private_process(
                     return message.reply_html(
                         text="❌ هیچ اکانتی یافت نشد", reply_to_message_id=message_id
                     )
-                # تقسیم ورودی بر اساس خطوط
-                ex_nl_text = text.split("\n")
 
                 try:
+                    # تقسیم ورودی بر اساس خطوط
+                    ex_nl_text = text.strip().split("\n")
+
                     # آخرین خط: تعداد ارسال
-                    count = int(ex_nl_text[-1])
+                    count = int(ex_nl_text[-1].strip())
 
                     # ماقبل آخرین خط: لینک مقصد
-                    target = ex_nl_text[-2].replace("/+", "/joinchat/")
+                    target = ex_nl_text[-2].strip().replace("/+", "/joinchat/")
 
                     # خط اول: لینک‌های مبدا (جدا شده با کاما)
                     sources = [src.strip().replace("/+", "/joinchat/") for src in ex_nl_text[0].split(",")]
 
                     # بررسی ورودی‌ها
                     if len(target) > 200 or any(len(src) > 200 for src in sources):
-                        message.reply_html("❌ یکی از لینک‌ها بیش از حد طولانی است", reply_to_message_id=message_id)
+                        return message.reply_html(
+                            text="❌ یکی از لینک‌ها بیش از حد طولانی است", reply_to_message_id=message_id
+                        )
                     
-                    if target[:13] != "https://t.me/":
-                        message.reply_html("❌ لینک مقصد اشتباه است", reply_to_message_id=message_id)
-                    
+                    if not target.startswith("https://t.me/"):
+                        return message.reply_html(
+                            text="❌ لینک مقصد اشتباه است", reply_to_message_id=message_id
+                        )
+
                     for src in sources:
-                        if src[:13] != "https://t.me/":
-                            message.reply_html(f"❌ لینک مبدا نامعتبر است: {src}", reply_to_message_id=message_id)
+                        if not src.startswith("https://t.me/"):
+                            return message.reply_html(
+                                text=f"❌ لینک مبدا نامعتبر است: {src}", reply_to_message_id=message_id
+                            )
 
-                except:
-                    message.reply_html("❌ ورودی اشتباه است", reply_to_message_id=message_id)
-
-                # نمایش خروجی (برای بررسی)
-                print("مقصد:", target)
-                print("تعداد ارسال:", count)
-                print("مبداها:", sources)
-
+                except Exception as e:
+                    return message.reply_html(text=f"❌ ورودی اشتباه است: {str(e)}", reply_to_message_id=message_id)
 
                 # ذخیره اطلاعات در دیتابیس
-                sources_str = ",".join(sources)  # ذخیره همه لینک‌های مبدا به صورت یک رشته جداشده با کاما
+                sources_str = ",".join(sources)  # تبدیل لیست به رشته جدا شده با کاما
                 cs.execute(
                     f"UPDATE {utl.orders} SET origin='{sources_str}', destination='{target}', count={count}, is_analyzing=1 WHERE id={row_orders['id']}"
                 )
@@ -1694,6 +1695,7 @@ def private_process(
                     f"{utl.python_version} \"{directory}/tl_analyze.py\" {row_mbots['uniq_id']} {from_id} {row_orders['id']} order_link {info_msg.message_id}"
                 )
                 return info_msg.delete()
+
 
             if ex_step[1] == "type_users":
                 if text == "همه کاربران":
