@@ -1,0 +1,68 @@
+آموزش نصب سورس پایتون ربات تلگرام در سرور مجازی اوبونتو22
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+https://linklick.ir/upload
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
+apt-get update && apt-get upgrade -y
+
+apt install snapd unzip pip mysql-server
+
+apt install screen
+
+
+
+mysql -u root -p
+ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'ef94610ca67eb6';
+SET GLOBAL sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+
+CREATE DATABASE novinbot;
+SHOW DATABASES;
+
+mkdir novinbot
+ls
+cd novinbot
+
+wget -O novin.zip "https://fh1.linklick.ir/c98f9c2f704165d149491707b63a24fa.linklick.ir.zip"
+unzip novin.zip
+nano novinbot/config.py
+python3 novinbot/install.py
+python3 novinbot/db.py
+screen
+python3 novinbot/run.py
+
+-------------------------------------------------------------------------------------------
+ران کردن:
+mkdir Novinbot && ls && cd mybot
+screen
+python3 novinbot/run.py
+
+============================================================================================
+می‌تونی محتوای فایل رو با دستور زیر ببینی تا متوجه بشی آیا خطا یا پیامی خاص در این فایل  وجود داره
+cat novinarz.zip
+----------------------------------------------------------------------------------
+همچنین می‌تونی از گزینه -O در wget برای ذخیره فایل با نام دلخواه استفاده کنی:
+
+wget -O novin.zip "https://linklick.ir/free-upload-linklick-ir/nrcdhulpofs0lok/"
+unzip novin.zip
+----------------------------------------------------------------------------------
+بررسی مسیر جاری: برای بررسی مسیر فعلی، از دستور pwd استفاده کنید:
+pwd
+----------------------------------------------------------------------------------
+رای حذف دایرکتوری novinarz، دستور زیر را وارد کنید:
+rm -r novinarz
+----------------------------------------------------------------------------------
+ویرایشگر متن در ابونتو
+nano ~/novinverifyonebot/novinverifyonebot/config.py
+----------------------------------------------------
+root/novinverifyonebot/novinverifyonebot/python3 db.py
+python3 /root/novinverifyonebot/novinverifyonebot/db.py
+
+
+
+
+
+
+
+
+
