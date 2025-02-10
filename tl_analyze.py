@@ -486,6 +486,8 @@ try:
                 row_orders = cs.fetchone()
                 links = row_orders["origin"].split(",")  # جدا کردن لینک‌های مبدا
 
+                origin_ids = []  # لیستی برای ذخیره آیدی‌های چت‌های مبدا
+
                 for link in links:  # پردازش هر لینک مبدا به‌صورت جداگانه
                     link = link.strip()
                     try:
@@ -516,9 +518,12 @@ try:
                     )
                     chat_origin = result.full_chat.id
                     origin_id = int(f"-100{result.full_chat.id}")
-                    cs.execute(
-                        f"UPDATE {utl.orders} SET origin_id='{origin_id}' WHERE id={row_orders['id']}'"
-                    )
+                    origin_ids.append(origin_id)  # اضافه کردن به لیست
+
+                origin_ids_str = ",".join(origin_ids)
+                cs.execute(
+                    f"UPDATE {utl.orders} SET origin_id='{origin_ids_str}' WHERE id={row_orders['id']}"
+                )
 
 
                 link = row_orders["destination"]
