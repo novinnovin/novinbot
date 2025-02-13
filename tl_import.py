@@ -1,10 +1,5 @@
-import os
-import sys
-import time
+import os, sys, time, telethon.sync, utility as utl
 
-import telethon.sync
-
-import utility as utl
 
 for index, arg in enumerate(sys.argv):
     if index == 1:
@@ -20,11 +15,7 @@ cs = cs.data()
 cs.execute(f"SELECT * FROM {utl.mbots} WHERE uniq_id='{mbots_uniq_id}'")
 row_mbots = cs.fetchone()
 try:
-    client = telethon.sync.TelegramClient(
-        session=f"{directory}/sessions/{row_mbots['uniq_id']}.session",
-        api_id=row_mbots["api_id"],
-        api_hash=row_mbots["api_hash"],
-    )
+    client = telethon.sync.TelegramClient(session=f"{directory}/sessions/{row_mbots['uniq_id']}.session", api_id=row_mbots['api_id'], api_hash=row_mbots['api_hash'])
     client.connect()
     if client.is_user_authorized():
         me = client.get_me()
@@ -35,10 +26,8 @@ try:
         row_mbots_select = cs.fetchone()
         if row_mbots_select is None:
             print("Success")
-            phone = phone.replace("+", "").replace(" ", "")
-            cs.execute(
-                f"UPDATE {utl.mbots} SET user_id={me.id},phone='{phone}',status=1,created_at={timestamp} WHERE id={row_mbots['id']}"
-            )
+            phone = phone.replace("+","").replace(" ","")
+            cs.execute(f"UPDATE {utl.mbots} SET user_id={me.id},phone='{phone}',status=1,created_at={timestamp} WHERE id={row_mbots['id']}")
         else:
             print("Existed")
     else:

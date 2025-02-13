@@ -1,12 +1,5 @@
-import os
-import sys
-import time
+import os, sys, time, jdatetime, telethon, telethon.sync, utility as utl
 
-import jdatetime
-import telethon
-import telethon.sync
-
-import utility as utl
 
 for index, arg in enumerate(sys.argv):
     if index == 1:
@@ -29,36 +22,24 @@ cs = cs.data()
 cs.execute(f"SELECT * FROM {utl.mbots} WHERE uniq_id='{mbots_uniq_id}'")
 row_mbots = cs.fetchone()
 
-utl.get_params_pids_by_full_script_name(
-    param1=row_mbots["uniq_id"], is_kill_proccess=True
-)
+utl.get_params_pids_by_full_script_name(param1=row_mbots['uniq_id'], is_kill_proccess=True)
 
 count_op = 0
 # timestamp_start = int(time.time())
 # count_analyze = int(ex_data[0])
 # count_analyzable = int(ex_data[1])
 try:
-    client = telethon.sync.TelegramClient(
-        session=f"{directory}/sessions/{row_mbots['uniq_id']}",
-        api_id=row_mbots["api_id"],
-        api_hash=row_mbots["api_hash"],
-    )
+    client = telethon.sync.TelegramClient(session=f"{directory}/sessions/{row_mbots['uniq_id']}", api_id=row_mbots['api_id'], api_hash=row_mbots['api_hash'])
     client.connect()
     if not client.is_user_authorized():
         cs.execute(f"UPDATE {utl.mbots} SET status=0 WHERE id={row_mbots['id']}")
     else:
-        if status == "channel":
-            cs.execute(
-                f"UPDATE {utl.mbots} SET last_leave_at={timestamp} WHERE id={row_mbots['id']}"
-            )
+        if status == 'channel':
+            cs.execute(f"UPDATE {utl.mbots} SET last_leave_at={timestamp} WHERE id={row_mbots['id']}")
             for dialog in client.iter_dialogs():
                 chat_id = dialog.entity.id
                 if isinstance(dialog.entity, telethon.types.Channel):
-                    client(
-                        telethon.functions.channels.LeaveChannelRequest(
-                            channel=dialog.entity
-                        )
-                    )
+                    client(telethon.functions.channels.LeaveChannelRequest(channel=dialog.entity))
                     count_op += 1
             # if (int(time.time()) - timestamp_start) > 4 or count_analyze == count_analyzable:
             #     timestamp_start = int(time.time())
@@ -75,3 +56,4 @@ try:
             #     )
 except Exception as e:
     print(f"{row_mbots['phone']}: {e}")
+
